@@ -2,6 +2,7 @@ package com.spring;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
