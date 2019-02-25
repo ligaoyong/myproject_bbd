@@ -1,29 +1,21 @@
-package com.spring5.Aop.transaction;
+package com.spring5.DataAccess.ProgrammaticTransactionManagement;
 
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DelegatingDataSource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.context.annotation.RequestScope;
 
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 数据库配置
  */
 @Configuration
-@EnableAspectJAutoProxy
-//@Import() 导入配置类
-//@ImportResource 导入xml
-//@PropertySource() 导入properties文件
-public class DataBaseConfig {
+public class DBConfig {
 
     @Bean
     public DataSource dataSource(){
@@ -35,7 +27,7 @@ public class DataBaseConfig {
         return dataSource;
     }
 
-    @RequestScope// 声明Bean的作用域为当前请求 每个请求都会创建新的Bean
+    //@RequestScope// 声明Bean的作用域为当前请求 每个请求都会创建新的Bean
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource){
         return new JdbcTemplate(dataSource);
@@ -44,5 +36,16 @@ public class DataBaseConfig {
     @Bean
     public PlatformTransactionManager transactionManager(DataSource dataSource){
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    /**
+     * 事务模板，比DataSourceTransactionManager更加高级的一种事务控制方式
+     * DataSourceTransactionManager比较底层
+     * @param platformTransactionManager
+     * @return
+     */
+    @Bean
+    public TransactionTemplate transactionTemplate(PlatformTransactionManager platformTransactionManager){
+        return new TransactionTemplate(platformTransactionManager);
     }
 }

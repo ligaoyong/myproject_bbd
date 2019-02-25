@@ -5,11 +5,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 @Component
 public class Test {
@@ -23,7 +19,6 @@ public class Test {
 
         /*Connection connection = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
         System.out.println("业务代码中的connection："+connection);*/
-
         int i = 1 / 0;
 
         jdbcTemplate.execute("insert into student values(12,'zhangsan')");
