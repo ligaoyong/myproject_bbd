@@ -59,7 +59,7 @@ public class AnnotationTransActionAspect {
          */
         //初始化同步
         TransactionSynchronizationManager.initSynchronization();
-        //注册一个同步
+        //注册一个同步（本质上是一个事务执行过程中的回调接口）
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
             @Override
             public void afterCommit() {
