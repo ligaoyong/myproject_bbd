@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.counting;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com"})
+@ComponentScan(basePackages = {"com.bbd.stream"})
 public class MyprojectApplication {
 
 	@Autowired
