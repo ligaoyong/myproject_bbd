@@ -53,6 +53,7 @@ public class MybatsiConfig {
         /**
          * 如果存在一个对等的 XML 配置文件的话，MyBatis 会自动查找并加载它
          * （这种情况下， BlogMapper.xml 将会基于类路径和 BlogMapper.class 的类名被加载进来）
+         * 不过idea默认不编译src下的xml文件 所以需要在maven中设置build
          */
         //configuration.addMapper(BlogMapper.class);
 

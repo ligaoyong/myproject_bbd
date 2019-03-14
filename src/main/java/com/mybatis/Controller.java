@@ -24,7 +24,7 @@ public class Controller {
         Dao mapper = sqlSession.getMapper(Dao.class);
         return mapper.getAll();
         /**
-         * 由此可知 平时注入的xxxDao本质是sqlSession返回的Mapper
+         * 由此可知 平时注入的xxxDao本质是sqlSession返回的MapperProxy
          */
     }
 
@@ -32,6 +32,7 @@ public class Controller {
     public Integer getCount(){
         SqlSession sqlSession = sqlSessionFactory.openSession();
         Dao mapper = sqlSession.getMapper(Dao.class);
-        return mapper.getRows();
+        Integer rows = mapper.getRows();
+        return rows;
     }
 }

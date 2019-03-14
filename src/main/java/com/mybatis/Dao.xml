@@ -5,7 +5,7 @@
 <mapper namespace="com.mybatis.Dao">
     <!--开启二级缓存 基于namespace的
         一级缓存默认是开启的 是基于session的-->
-    <cache></cache>
+    <!--<cache></cache>--><!--在接口中已经使用注解开启后 在xml中就不用再开启了-->
     <select id="getRows" resultType="java.lang.Integer">
         select count(*) from after_loan_rule;
     </select>

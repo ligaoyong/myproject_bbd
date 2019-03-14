@@ -83,6 +83,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-web-reactive -->
+		<!--<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web-reactive</artifactId>
+			&lt;!&ndash;<version>5.0.0.M3</version>&ndash;&gt;
+		</dependency>-->
+
 
 		<!--<dependency>-->
             <!--<groupId>org.junit.jupiter</groupId>-->
@@ -109,6 +116,16 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<!--idea默认不编译src下的xml文件 所以为导致mybatis加载不到src下面的xml文件-->
+					<!--添加之后就会加载-->
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 
 

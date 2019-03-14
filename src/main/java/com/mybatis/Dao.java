@@ -1,14 +1,15 @@
 package com.mybatis;
 
+import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.CacheNamespaceRef;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 
 import java.util.List;
 
+@CacheNamespace //为该接口开启二级缓存
 public interface Dao {
 
-    //@CacheNamespaceRef() 缓存到二级缓存中
     @Select("select * from after_loan_rule;")
     List<Entity> getAll();
 
