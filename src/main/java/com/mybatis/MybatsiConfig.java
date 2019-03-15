@@ -23,9 +23,10 @@ public class MybatsiConfig {
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/learn");
+        //dataSource.setUrl("jdbc:mysql://localhost:3306/learn");
+        dataSource.setUrl("jdbc:mysql://120.78.74.253:3306/learn");//阿里云数据库
         dataSource.setUsername("root");
-        dataSource.setPassword("root");
+        dataSource.setPassword("123456");
         return dataSource;
     }
 
