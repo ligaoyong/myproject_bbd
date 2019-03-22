@@ -32,7 +32,7 @@ public class MvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addFormatter(null);
+        //registry.addFormatter(null);
     }
 
     /**
@@ -79,8 +79,8 @@ public class MvcConfig implements WebMvcConfigurer {
                 .indentOutput(true)
                 .dateFormat(new SimpleDateFormat("yyyy-MM-dd"))
                 .modulesToInstall(new ParameterNamesModule());
-        converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
-        converters.add(new MappingJackson2XmlHttpMessageConverter(builder.createXmlMapper(true).build()));
+        //converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
+        //converters.add(new MappingJackson2XmlHttpMessageConverter(builder.createXmlMapper(true).build()));
     }
 
     /**
@@ -89,7 +89,7 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         //url路径--->视图名称
-        registry.addViewController("index").setViewName("index");
+        registry.addViewController("/").setViewName("index");
     }
 
     /**
@@ -97,8 +97,8 @@ public class MvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        registry.enableContentNegotiation(new MappingJackson2JsonView());
-        registry.jsp();
+        /*registry.enableContentNegotiation(new MappingJackson2JsonView());
+        registry.jsp();*/
     }
 
     /**

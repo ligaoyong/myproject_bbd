@@ -12,8 +12,8 @@ import javax.annotation.Resource;
 @Controller
 public class RestClients {
 
-    @Resource
-    private RestTemplate restTemplate;//过世的东西 使用reactive的WebClient
+    /*@Resource
+    private RestTemplate restTemplate;*///过世的东西 使用reactive的WebClient
 
 
 
