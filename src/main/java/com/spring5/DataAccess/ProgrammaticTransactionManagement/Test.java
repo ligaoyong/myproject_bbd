@@ -47,6 +47,7 @@ public class Test {
 
         DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setTimeout(100);
+        //调用doGetTransaction获取与当前线程、数据源相关的事物及连接
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
