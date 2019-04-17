@@ -28,6 +28,11 @@ public class ServiceProvider {
 
         while (true) {
             Socket socket = serverSocket.accept();
+            System.out.println(socket.toString());
+            /**
+             * Socket[addr=/192.168.139.139,port=60753,localport=12345]
+             * Socket[addr=/192.168.139.139,port=60754,localport=12345] 源端口会被客户端随机设置
+             */
             executorService.execute(() -> {
                 try {
                     try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
