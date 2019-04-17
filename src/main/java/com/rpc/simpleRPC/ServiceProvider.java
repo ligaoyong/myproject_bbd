@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 public class ServiceProvider {
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket();
-        serverSocket.bind(new InetSocketAddress("0.0.0.0", 12345));
+        serverSocket.bind(new InetSocketAddress("0.0.0.0", 12345),200); //连接请求队列长度200
         ExecutorService executorService = Executors.newCachedThreadPool();
 
         //生产中 根据接口名称从容器中查找实现类
