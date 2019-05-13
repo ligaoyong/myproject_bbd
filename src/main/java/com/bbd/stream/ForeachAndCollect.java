@@ -27,6 +27,9 @@ public class ForeachAndCollect {
         //使用foreach来计数
         list.forEach(x -> map.merge(x,1L,Long::sum));
         System.out.println(map.toString());
+        /*list.removeIf((x) -> {
+            return true;
+        });*/
 
         //使用collect来计数
         Map<String, Long> collect = list.stream().collect(Collectors.groupingBy(x -> x, counting()));
