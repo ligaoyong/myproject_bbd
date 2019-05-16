@@ -1,6 +1,8 @@
 package com.mybatis.springMybatis;
 
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -68,6 +70,17 @@ public class BatisSpringConfig {
          * 由此可知 mapper接口的动态代理MapperFactoryBean是由MapperScannerConfigurer创建的
          */
         return mapperScannerConfigurer;
+    }
+
+    /**
+     * 可以配置 也可以不配置 只是为了方便直接使用SqlSession 在于spring整合时可以不配置
+     * @param sqlSessionFactory
+     * @return
+     */
+    @Bean
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory){
+        SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory);
+        return sqlSessionTemplate;
     }
 
     /**

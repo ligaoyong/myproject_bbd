@@ -33,6 +33,11 @@ public class DBConfig {
         return new JdbcTemplate(dataSource);
     }
 
+    /**
+     * 其中的doGetTransaction方法使用了TransactionSynchronizationManager(事务的核心底层类)
+     * @param dataSource
+     * @return
+     */
     @Bean
     public PlatformTransactionManager transactionManager(DataSource dataSource){
         return new DataSourceTransactionManager(dataSource);
