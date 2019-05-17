@@ -1,4 +1,4 @@
-package com.NIO.netty.util;
+package com.NIO.netty.model;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

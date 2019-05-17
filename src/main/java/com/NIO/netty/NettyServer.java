@@ -13,6 +13,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
+/**
+ * netty 主要的处理逻辑在handle里面 其他的都是模板代码
+ */
 public class NettyServer {
     public static void main(String[] args) {
         //相当于线程组

@@ -1,4 +1,4 @@
-package com.NIO.netty.util;
+package com.NIO.netty.model;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -64,6 +64,10 @@ public class PacketCodeC {
             return LoginRequestPacket.class;
         if (command == 2)
             return LoginResponsePacket.class;
+        if (command == 3)
+            return MessageRequestPacket.class;
+        if (command == 4)
+            return MessageResponsePacket.class;
         return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.NIO.netty.util;
+package com.NIO.netty.model;
 
 /**
  * 序列化器

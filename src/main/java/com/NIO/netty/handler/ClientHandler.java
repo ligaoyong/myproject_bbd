@@ -1,9 +1,7 @@
 package com.NIO.netty.handler;
 
-import com.NIO.netty.util.LoginRequestPacket;
-import com.NIO.netty.util.LoginResponsePacket;
-import com.NIO.netty.util.Packet;
-import com.NIO.netty.util.PacketCodeC;
+import com.NIO.netty.model.*;
+import com.NIO.netty.util.LoginUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -50,15 +48,21 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         ByteBuf byteBuf = (ByteBuf) msg;
 
         Packet packet = PacketCodeC.decode(byteBuf);
-
+        //处理登陆响应
         if (packet instanceof LoginResponsePacket) {
             LoginResponsePacket loginResponsePacket = (LoginResponsePacket) packet;
 
             if (loginResponsePacket.getSuccess()) {
                 System.out.println(LocalDateTime.now() + ": 客户端登录成功");
+                //标记该通道登陆成功
+                LoginUtil.markAsLogin(ctx.channel());
             } else {
                 System.out.println(LocalDateTime.now() + ": 客户端登录失败，原因：" + loginResponsePacket.getReason());
             }
+            //处理消息响应
+        }if (packet instanceof MessageResponsePacket){
+            MessageResponsePacket messageResponsePacket = (MessageResponsePacket) packet;
+            System.out.println(LocalDateTime.now() + ": 收到服务端的消息: " + messageResponsePacket.getMessage());
         }
     }
 }

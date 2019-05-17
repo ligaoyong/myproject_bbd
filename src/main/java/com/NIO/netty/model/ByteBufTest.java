@@ -1,4 +1,4 @@
-package com.NIO.netty.util;
+package com.NIO.netty.model;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;

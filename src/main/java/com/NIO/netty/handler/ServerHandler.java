@@ -1,9 +1,11 @@
 package com.NIO.netty.handler;
 
-import com.NIO.netty.util.*;
+import com.NIO.netty.model.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import java.time.LocalDateTime;
 
 /**
  * 服务端处理器
@@ -31,6 +33,14 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             //返回给客户端
             ByteBuf byteBuf = PacketCodeC.encode(loginResponsePacket);
             ctx.channel().writeAndFlush(byteBuf);
+        }else if (packet instanceof MessageRequestPacket) {// 处理消息请求
+            MessageRequestPacket messageRequestPacket = ((MessageRequestPacket) packet);
+            System.out.println(LocalDateTime.now() + ": 收到客户端消息: " + messageRequestPacket.getMessage());
+
+            MessageResponsePacket messageResponsePacket = new MessageResponsePacket();
+            messageResponsePacket.setMessage("服务端回复【" + messageRequestPacket.getMessage() + "】");
+            ByteBuf responseByteBuf = PacketCodeC.encode(messageResponsePacket);
+            ctx.channel().writeAndFlush(responseByteBuf);
         }
     }
 

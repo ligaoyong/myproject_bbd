@@ -1,12 +1,12 @@
 package com.NIO.netty;
 
 import com.NIO.netty.handler.ClientHandler;
+import com.NIO.netty.model.MessageRequestPacket;
+import com.NIO.netty.model.PacketCodeC;
+import com.NIO.netty.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -16,6 +16,7 @@ import io.netty.util.AttributeKey;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class NettyClient {
@@ -53,6 +54,7 @@ public class NettyClient {
                         ch.pipeline().addLast(new ClientHandler());
                     }
                 });
+
         /**
          * attr() 方法可以给客户端 Channel，也就是NioSocketChannel绑定自定义属性，
          * 然后我们可以通过channel.attr()取出这个属性
@@ -80,6 +82,10 @@ public class NettyClient {
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
                 System.out.println("连接成功");
+                //连接成功或可以获取Channel 所有的客户端数据发送都需要用这个Channel
+                Channel channel = ((ChannelFuture) future).channel();
+                // 连接成功之后，启动控制台线程
+                startConsoleThread(channel);
             } else {
                 System.out.println("连接失败");
                 // 第几次重连
@@ -98,5 +104,22 @@ public class NettyClient {
                         .SECONDS);
             }
         });
+    }
+
+    private static void startConsoleThread(Channel channel) {
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                if (LoginUtil.hasLogin(channel)) {
+                    System.out.println("输入消息发送至服务端: ");
+                    Scanner sc = new Scanner(System.in);
+                    String line = sc.nextLine();
+
+                    MessageRequestPacket packet = new MessageRequestPacket();
+                    packet.setMessage(line);
+                    ByteBuf byteBuf = PacketCodeC.encode(packet);
+                    channel.writeAndFlush(byteBuf);
+                }
+            }
+        }).start();
     }
 }
