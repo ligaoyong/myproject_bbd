@@ -34,7 +34,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         ByteBuf byteBuf = PacketCodeC.encode(loginRequestPacket);
 
         //发送数据
-        ctx.channel().writeAndFlush(byteBuf);
+        ctx.channel().writeAndFlush(byteBuf); //异步的
     }
 
     /**

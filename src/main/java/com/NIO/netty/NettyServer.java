@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 
 /**
  * netty 主要的处理逻辑在handle里面 其他的都是模板代码
+ * 而多个handle可以形成一条handle链 注意执行顺序即可
+ * ======读数据的handle与添加的顺序保持一致
+ * ======写数据的handle与添加的顺序相反
  */
 public class NettyServer {
     public static void main(String[] args) {
