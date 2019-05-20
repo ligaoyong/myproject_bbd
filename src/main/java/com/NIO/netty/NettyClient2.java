@@ -1,31 +1,26 @@
 package com.NIO.netty;
 
-import com.NIO.netty.handler.ClientHandler;
 import com.NIO.netty.handler.handlerChain.*;
 import com.NIO.netty.model.LoginRequestPacket;
 import com.NIO.netty.model.MessageRequestPacket;
-import com.NIO.netty.model.PacketCodeC;
-import com.NIO.netty.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.FixedLengthFrameDecoder;
-import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 客户端1：张三
+ * 客户端2 ： 李四
  */
-public class NettyClient {
+public class NettyClient2 {
     public static void main(String[] args) {
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
@@ -130,24 +125,24 @@ public class NettyClient {
 
     private static void startConsoleThread(Channel channel) {
         new Thread(() -> {
-            String userName = "张三";
+            String userName = "李四";
             LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
             loginRequestPacket.setUsername(userName);
             channel.writeAndFlush(loginRequestPacket);
 
             while (!Thread.interrupted()) {
                 //if (LoginUtil.hasLogin(channel)) { 登录状态由服务端维护
-                    //System.out.println("输入消息发送: ");
-                    Scanner scc = new Scanner(System.in);
-                    String line = scc.nextLine();
+                //System.out.println("输入消息发送: ");
+                Scanner scc = new Scanner(System.in);
+                String line = scc.nextLine();
 
-                    MessageRequestPacket packet = new MessageRequestPacket();
-                    packet.setToUserId("lisi"); //发消息
-                    packet.setMessage(line);
+                MessageRequestPacket packet = new MessageRequestPacket();
+                packet.setToUserId("zhangsan"); //发消息
+                packet.setMessage(line);
 
 //                    ByteBuf byteBuf = PacketCodeC.encode(packet);
 //                    channel.writeAndFlush(byteBuf);
-                    channel.writeAndFlush(packet);
+                channel.writeAndFlush(packet);
                 //}
             }
         }).start();

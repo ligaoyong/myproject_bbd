@@ -7,7 +7,8 @@ import lombok.Data;
  */
 @Data
 public class MessageRequestPacket extends Packet{
-
+    private String name;
+    private String toUserId;
     private String message;
 
     @Override

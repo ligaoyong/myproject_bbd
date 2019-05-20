@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class MessageResponsePacket extends Packet{
-
+    private String fromName;
     private String message;
 
     @Override

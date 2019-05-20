@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
 /**
- * 包编码器、解码器
+ * 包编码器、解码器  比较原始的方式
  */
 public class PacketCodeC {
     private static final int MAGIC_NUMBER = 0x12345678;
@@ -24,6 +24,18 @@ public class PacketCodeC {
         byteBuf.writeBytes(bytes);
 
         return byteBuf;
+    }
+
+    public static void encode(ByteBuf byteBuf, Packet packet) {
+        // 1. 序列化 java 对象
+        byte[] bytes = Serializer.DEFAULT.serialize(packet);
+        // 2. 实际编码过程
+        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeByte(packet.getVersion());
+        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
+        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeInt(bytes.length);
+        byteBuf.writeBytes(bytes);
     }
 
     public static Packet decode(ByteBuf byteBuf) {

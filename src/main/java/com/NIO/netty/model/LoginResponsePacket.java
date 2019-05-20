@@ -7,6 +7,7 @@ public class LoginResponsePacket extends Packet {
 
     private Boolean success;
     private String reason;
+    private String userId;
 
     @Override
     public Byte getCommand() {

@@ -1,12 +1,16 @@
 package com.NIO.netty;
 
 import com.NIO.netty.handler.ServerHandler;
+import com.NIO.netty.handler.handlerChain.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.util.AttributeKey;
 
 import java.nio.charset.Charset;
@@ -51,7 +55,31 @@ public class NettyServer {
                                 ctx.channel().writeAndFlush(buffer);
                             }
                         });*/
-                        ch.pipeline().addLast(new ServerHandler());
+                        //基础
+                        //ch.pipeline().addLast(new ServerHandler());
+
+//                        //pipeline
+//                        //in
+//                        ch.pipeline().addLast(new PacketDecoder());
+//                        ch.pipeline().addLast(new LoginRequestHandler());
+//                        ch.pipeline().addLast(new AuthHandler()); //身份认证
+//                        ch.pipeline().addLast(new MessageRequestHandler());
+//                        //our
+//                        ch.pipeline().addLast(new PacketEncoder());
+
+                        /**************测试拆包、粘包***********/
+                        //加入固定长度的解码器，则不会出现拆包与粘包
+                        // 你好，欢迎关注我的微信公众号，《闪电侠的博客》! 长度70字节
+                        //ch.pipeline().addLast(new FixedLengthFrameDecoder(70));
+
+                        //加入换行符解码器 但每行不超过100字节
+                        //ch.pipeline().addLast(new LineBasedFrameDecoder(100));
+                        //ch.pipeline().addLast(new FirstServerHandler());
+                        /******************单聊*******************/
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new SingleChatLoginRequestHandler());
+                        ch.pipeline().addLast(new SingleChatMessageRequestHandle());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         //serverBootstrap.bind(8000);
