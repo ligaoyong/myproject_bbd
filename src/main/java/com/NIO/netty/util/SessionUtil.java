@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionUtil {
 
-    private static ConcurrentHashMap<String, Channel> map = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, Channel> userIdToChannel = new ConcurrentHashMap<>();
 
     /**
      * 绑定会话：userId--channel
@@ -16,7 +16,7 @@ public class SessionUtil {
      */
     @SuppressWarnings("all")
     public static void bindSession(Session session,Channel channel){
-        map.put(session.getUserId(), channel);
+        userIdToChannel.put(session.getUserId(), channel);
         channel.attr(Attributes.SESSION).set(session);
     }
 
@@ -27,7 +27,7 @@ public class SessionUtil {
     @SuppressWarnings("all")
     public static void unBindSession(Channel channel){
         Session session = (Session)channel.attr(Attributes.SESSION).get();
-        map.remove(session.getUserId());
+        userIdToChannel.remove(session.getUserId());
         channel.attr(Attributes.SESSION).set(null);
     }
 
@@ -43,6 +43,6 @@ public class SessionUtil {
 
     public static Channel getChannel(String userId) {
 
-        return map.get(userId);
+        return userIdToChannel.get(userId);
     }
 }
