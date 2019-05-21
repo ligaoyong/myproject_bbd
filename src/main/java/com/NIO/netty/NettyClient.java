@@ -1,23 +1,15 @@
 package com.NIO.netty;
 
-import com.NIO.netty.handler.ClientHandler;
 import com.NIO.netty.handler.handlerChain.*;
 import com.NIO.netty.model.LoginRequestPacket;
 import com.NIO.netty.model.MessageRequestPacket;
-import com.NIO.netty.model.PacketCodeC;
-import com.NIO.netty.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.FixedLengthFrameDecoder;
-import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -72,7 +64,7 @@ public class NettyClient {
                         /*****************单聊******************/
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new SingleChatLoginResponseHandler());
-                        ch.pipeline().addLast(new SimpleChatMessageResponseHandler());
+                        ch.pipeline().addLast(new SingleChatMessageResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
@@ -144,7 +136,6 @@ public class NettyClient {
                     MessageRequestPacket packet = new MessageRequestPacket();
                     packet.setToUserId("lisi"); //发消息
                     packet.setMessage(line);
-
 //                    ByteBuf byteBuf = PacketCodeC.encode(packet);
 //                    channel.writeAndFlush(byteBuf);
                     channel.writeAndFlush(packet);

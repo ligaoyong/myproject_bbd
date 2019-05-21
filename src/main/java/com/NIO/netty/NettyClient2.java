@@ -67,7 +67,7 @@ public class NettyClient2 {
                         /*****************单聊******************/
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new SingleChatLoginResponseHandler());
-                        ch.pipeline().addLast(new SimpleChatMessageResponseHandler());
+                        ch.pipeline().addLast(new SingleChatMessageResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
