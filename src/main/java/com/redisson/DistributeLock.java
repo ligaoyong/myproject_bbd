@@ -3,8 +3,8 @@ package com.redisson;
 import org.junit.Before;
 import org.junit.Test;
 import org.redisson.RedissonMultiLock;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
+import org.redisson.RedissonRedLock;
+import org.redisson.api.*;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,7 +21,110 @@ public class DistributeLock {
         redisson = RedissonConfig.newSingleInstance();
     }
 
+    /**
+     * 信号量(Semaphore)  会话结束后不会自动删除
+     * 闭锁（CountDownLatch）   会话结束后不会自动删除
+     */
+    @Test
+    public void test6() throws InterruptedException {
+        RSemaphore semaphore = redisson.getSemaphore("semaphore");
+        boolean setPermits = semaphore.trySetPermits(2);
+        System.out.println("setPermit : "+setPermits);
+        ExecutorService threadPool = Executors.newFixedThreadPool(3);
 
+        RCountDownLatch countDownLatch = redisson.getCountDownLatch("countDownLatch");
+        countDownLatch.trySetCount(3);
+
+        threadPool.execute(()->{
+            try {
+                semaphore.acquire(1);
+                System.out.println("进程1 ：获取信号成功，处理业务");
+                semaphore.release(1);
+                System.out.println("进程1 ：释放信号量");
+
+                countDownLatch.countDown();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        threadPool.execute(()->{
+            try {
+                semaphore.acquire(1);
+                System.out.println("进程2 ：获取信号成功，处理业务");
+                semaphore.release(1);
+                System.out.println("进程2 ：释放信号量");
+
+                countDownLatch.countDown();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        threadPool.execute(()->{
+            try {
+                semaphore.acquire(1);
+                System.out.println("进程3 ：获取信号成功，处理业务");
+                semaphore.release(1);
+                System.out.println("进程3 ：释放信号量");
+
+                countDownLatch.countDown();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        countDownLatch.await();
+        semaphore.delete(); //semaphore 不会自动删除
+        Thread.currentThread().join();
+    }
+
+    /**
+     * 读写锁
+     *      分布式可重入读写锁允许同时有多个读锁和一个写锁处于加锁状态。
+     */
+    @Test
+    public void test5(){
+        RReadWriteLock readWriteLock = redisson.getReadWriteLock("readWriteLock");
+        RLock readLock = readWriteLock.readLock(); //读锁
+        RLock writeLock = readWriteLock.writeLock(); //写锁
+
+        readLock.lock();
+        System.out.println("readLock locked");
+        readLock.lock();
+        System.out.println("readLock locked");
+        readLock.lock();
+        System.out.println("readLock locked");
+        readLock.unlock();
+        System.out.println("readLock unlocked");
+        readLock.unlock();
+        System.out.println("readLock unlocked");
+        readLock.unlock();
+        System.out.println("readLock unlocked");
+        writeLock.lock();
+        System.out.println("writeLock locked");
+        writeLock.unlock();
+        System.out.println("writeLock unlocked");
+    }
+
+    /**
+     * 红锁
+     *      在大部分节点上加锁成功就算成功
+     */
+    @Test
+    public void test4(){
+        RLock lock1 = redisson.getLock("lock1");
+        RLock lock2 = redisson.getLock("lock2");
+        RLock lock3 = redisson.getLock("lock3");
+
+        RedissonRedLock redLock = new RedissonRedLock(lock1, lock2, lock3);
+
+        lock1.lock();
+        System.out.println("lock1加锁成功");
+        redLock.lock();
+        System.out.println("redLock加锁成功");
+        redLock.unlock();
+        System.out.println("redLock unLocked");
+        lock1.unlock();
+        System.out.println("lock1 unlocked");
+    }
 
     /**
      * 联锁（MultiLock）

@@ -203,7 +203,7 @@ public class DistributeObject {
     }
 
     /**
-     * 地理空间位置桶
+     * 地理空间位置桶（Geo）
      */
     @Test
     public void test4(){
@@ -213,7 +213,7 @@ public class DistributeObject {
                 new GeoEntry(15.087269, 37.502669, "Catania"));
         geo.addAsync(37.618423, 55.751244, "Moscow");
 
-        Double distance = geo.dist("Palermo", "Catania", GeoUnit.METERS);
+        Double distance = geo.dist("Palermo", "Catania", GeoUnit.METERS); //m
         System.out.println("距离："+distance);
     }
 
