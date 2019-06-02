@@ -47,7 +47,7 @@ public class DistributeObject {
 
         threadPool.execute(()->{
             System.out.println("获取5个令牌.....");
-            rateLimiter.acquire(5);
+            rateLimiter.acquire(5); // 不用释放令牌 不在时间内的令牌会自动过期
             System.out.println("获取成功");
             System.out.println("处理业务.....");
         });
@@ -89,6 +89,7 @@ public class DistributeObject {
      * 基数估计算法（HyperLogLog）：不是一个准确数据
      * 该对象可以在有限的空间内通过概率算法统计大量的数据。
      * 例如 ：一个页面一天的访问量(同一个用户一天只能算一次)UV
+     * 防止重复
      */
     @Test
     public void test9(){
