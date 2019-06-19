@@ -69,7 +69,7 @@ public class TestLockSupport {
         });
         thread1.start();
 
-        Thread.sleep(4000); //先睡3s，保证thread1已经调用了park 线程进入waiting状态
+        Thread.sleep(4000); //先睡3s，保证thread1已经调用了park 当前线程进入waiting状态
         System.out.println("thread1 调用 park 后的状态："+thread1.getState());
         thread1.interrupt();//此时中断线程  线程会从waiting状态返回到Runnable状态正常执行 且不会抛出异常
 
