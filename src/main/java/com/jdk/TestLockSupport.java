@@ -48,4 +48,31 @@ public class TestLockSupport {
         LockSupport.unpark(thread1); //唤醒线程1
         Thread.currentThread().join();
     }
+
+    /**
+     * 测试线程 调用park后的状态  blocked 还是 waiting?
+     *      答案：进入waiting状态
+     */
+    @Test
+    public void test3() throws InterruptedException {
+        Thread thread1 = new Thread(()->{
+            try {
+                Thread.sleep(2000);
+                System.out.println("线程1调用park");
+                LockSupport.park();
+                System.out.println("线程1恢复执行,线程状态："+Thread.currentThread().getState()); //Runnable
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                //没有执行 从在调用park后的线程被中断后 不会抛出异常 只是返回正常状态 这点与其他的waiting不同
+                System.out.println("线程被中断，线程状态："+Thread.currentThread().getState());
+            }
+        });
+        thread1.start();
+
+        Thread.sleep(4000); //先睡3s，保证thread1已经调用了park 线程进入waiting状态
+        System.out.println("thread1 调用 park 后的状态："+thread1.getState());
+        thread1.interrupt();//此时中断线程  线程会从waiting状态返回到Runnable状态正常执行 且不会抛出异常
+
+        Thread.currentThread().join();
+    }
 }
