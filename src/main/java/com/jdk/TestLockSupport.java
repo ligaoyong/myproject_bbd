@@ -51,7 +51,7 @@ public class TestLockSupport {
 
     /**
      * 测试线程 调用park后的状态  blocked 还是 waiting?
-     *      答案：进入waiting状态
+     *      答案：进入waiting状态 并且被中断后不会抛出异常 并正常往下执行
      */
     @Test
     public void test3() throws InterruptedException {
