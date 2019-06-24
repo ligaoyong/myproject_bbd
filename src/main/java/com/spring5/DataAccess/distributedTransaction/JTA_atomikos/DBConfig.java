@@ -76,22 +76,23 @@ public class DBConfig {
      * @param userTransaction
      * @return
      */
-    @Bean
-    public JtaTransactionManager jtaTransactionManager(
-            @Qualifier("AtomikosTransactionManager") UserTransactionManager userTransactionManager,
-            @Qualifier("AtomikosUserTransaction") UserTransaction userTransaction){
-        JtaTransactionManager jtaTransactionManager = new JtaTransactionManager();
-        jtaTransactionManager.setTransactionManager(userTransactionManager);//设置事务管理器
-        jtaTransactionManager.setUserTransaction(userTransaction);//设置用户事务
-        return jtaTransactionManager;
-    }
-
-    @Bean("AtomikosTransactionManager")
-    public UserTransactionManager UserTransactionManager(){
-        UserTransactionManager userTransactionManager = new UserTransactionManager();
-        userTransactionManager.setForceShutdown(false);
-        return userTransactionManager;
-    }
+        // 也不用创建  直接使用UserTransaction即可
+//    @Bean
+//    public JtaTransactionManager jtaTransactionManager(
+//            @Qualifier("AtomikosTransactionManager") UserTransactionManager userTransactionManager,
+//            @Qualifier("AtomikosUserTransaction") UserTransaction userTransaction){
+//        JtaTransactionManager jtaTransactionManager = new JtaTransactionManager();
+//        jtaTransactionManager.setTransactionManager(userTransactionManager);//设置事务管理器
+//        jtaTransactionManager.setUserTransaction(userTransaction);//设置用户事务
+//        return jtaTransactionManager;
+//    }
+//    // 不用创建 UserTransaction会帮我们自动创建
+//    @Bean("AtomikosTransactionManager")
+//    public UserTransactionManager UserTransactionManager(){
+//        UserTransactionManager userTransactionManager = new UserTransactionManager();
+//        userTransactionManager.setForceShutdown(false);
+//        return userTransactionManager;
+//    }
 
     /**
      * 客户端程序员 也可以直接注入UserTransaction使用
