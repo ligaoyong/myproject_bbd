@@ -76,7 +76,9 @@ public class DBConfig {
      * @param userTransaction
      * @return
      */
-        // 也不用创建  直接使用UserTransaction即可
+        // 也不用创建  直接使用UserTransaction即可 但是要整合到spring中(如使用@Transactional)时，就需要手动创建
+        // 且必须设置UserTransaction，但不必创建UserTransactionManager(UserTransaction会创建)
+        // 此时JtaTransactionManager就作为一个事务管理器 在@Transactional中指定使用这个事务管理器即可
 //    @Bean
 //    public JtaTransactionManager jtaTransactionManager(
 //            @Qualifier("AtomikosTransactionManager") UserTransactionManager userTransactionManager,
@@ -86,6 +88,7 @@ public class DBConfig {
 //        jtaTransactionManager.setUserTransaction(userTransaction);//设置用户事务
 //        return jtaTransactionManager;
 //    }
+
 //    // 不用创建 UserTransaction会帮我们自动创建
 //    @Bean("AtomikosTransactionManager")
 //    public UserTransactionManager UserTransactionManager(){
@@ -98,7 +101,8 @@ public class DBConfig {
      * 客户端程序员 也可以直接注入UserTransaction使用
      * UserTransaction的一切事物操作会委托给TransactionManager，而TransactionManager又会委托给具体的ResourceManager
      * 所以JTA(XA)的分布式执行流程为：
-     *  UserTransaction------>TransactionManager------>ResourceManager
+     *  UserTransaction------>TransactionManager(UserTransaction会自动创建)------>ResourceManager(XAResource接口，提供商实现)
+     *  这里的TransactionManager不是spring的事务管理器，而是DTP模型中的TM，不是一回事
      * @return
      */
     @Bean("AtomikosUserTransaction")
