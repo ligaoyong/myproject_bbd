@@ -5,13 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 @RestController
 public class ValidationController {
 
     @GetMapping("get1")
-    public ResultVO get(@Validated Param param){ //@Valid注解也可以
+    public ResultVO get(@Validated(value = Group2.class) Param param){ //@Valid注解也可以    指定分组Group2
         //参数校验失败会抛出BindException异常
         /**
          * 注：spring自带的参数校验不是使用AOP功能来实现的 而是在一开始的数据绑定中校验的
