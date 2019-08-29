@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
@@ -69,35 +70,37 @@ public class DBConfig {
     }
 
     /**
-     * 客户端程序员直接使用JtaTransactionManager即可，而不用管TransactionManager、UserTransaction的
+     * 客户端程序员直接使用JtaTransactionManager(作为spring事务管理器)即可，而不用管TransactionManager、UserTransaction的
      * 具体实现
      * 也可以不用JtaTransactionManager，直接使用UserTransaction的实现也可以
-     * @param userTransactionManager
      * @param userTransaction
      * @return
      */
-    @Bean
+    // 也不用创建  直接使用UserTransaction即可 但是要整合到spring中(如使用@Transactional)时，就需要手动创建
+    // 且必须设置UserTransaction，但不必创建UserTransactionManager(UserTransaction会创建)
+    // 此时JtaTransactionManager就作为一个事务管理器 在@Transactional中指定使用这个事务管理器即可
+    @Bean("jtaTransactionManager")
     public JtaTransactionManager jtaTransactionManager(
-            @Qualifier("AtomikosTransactionManager") UserTransactionManager userTransactionManager,
             @Qualifier("AtomikosUserTransaction") UserTransaction userTransaction){
         JtaTransactionManager jtaTransactionManager = new JtaTransactionManager();
-        jtaTransactionManager.setTransactionManager(userTransactionManager);//设置事务管理器
         jtaTransactionManager.setUserTransaction(userTransaction);//设置用户事务
         return jtaTransactionManager;
     }
 
-    @Bean("AtomikosTransactionManager")
-    public UserTransactionManager UserTransactionManager(){
-        UserTransactionManager userTransactionManager = new UserTransactionManager();
-        userTransactionManager.setForceShutdown(false);
-        return userTransactionManager;
-    }
+//    // 不用创建 UserTransaction会帮我们自动创建
+//    @Bean("AtomikosTransactionManager")
+//    public UserTransactionManager UserTransactionManager(){
+//        UserTransactionManager userTransactionManager = new UserTransactionManager();
+//        userTransactionManager.setForceShutdown(false);
+//        return userTransactionManager;
+//    }
 
     /**
      * 客户端程序员 也可以直接注入UserTransaction使用
      * UserTransaction的一切事物操作会委托给TransactionManager，而TransactionManager又会委托给具体的ResourceManager
      * 所以JTA(XA)的分布式执行流程为：
-     *  UserTransaction------>TransactionManager------>ResourceManager
+     *  UserTransaction------>TransactionManager(UserTransaction会自动创建)------>ResourceManager(XAResource接口，提供商实现)
+     *  这里的TransactionManager不是spring的事务管理器，而是DTP模型中的TM，不是一回事
      * @return
      */
     @Bean("AtomikosUserTransaction")

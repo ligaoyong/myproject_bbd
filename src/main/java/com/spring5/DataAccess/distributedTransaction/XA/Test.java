@@ -30,6 +30,7 @@ public class Test {
      * XA协议存在数据不一致的情况(比如在commit之间发生异常)
      */
     public void test() throws SQLException, XAException {
+        //XAConnection也实现了XAResource
         XAConnection xaConnection1 = xaDataSource1.getXAConnection();
         XAConnection xaConnection2 = xaDataSource2.getXAConnection();
 
