@@ -51,6 +51,7 @@ public class TestUnpack {
 
     /**
      * 面向字节流得拆包与粘包现象及解决方案
+     * 解决方案：在每个数据包的开头添加报文头(数据包的长度)
      * @throws IOException
      */
     @Test
