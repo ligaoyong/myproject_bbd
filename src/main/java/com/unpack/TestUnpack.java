@@ -16,6 +16,10 @@ import java.nio.charset.StandardCharsets;
  *  而nio下(netty)因为client与server端都是面向bytebuffer而 如果不控制字节顺序的话
  *  则会产生粘包与拆包
  */
+
+/**
+ * 最后还演示了tcp底层的拆包与粘包机制
+ */
 public class TestUnpack {
 
     @Test
