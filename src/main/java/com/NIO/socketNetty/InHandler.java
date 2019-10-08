@@ -13,7 +13,7 @@ import java.net.SocketAddress;
  * @author ligaoyong@gogpay.cn
  * @date 2019/9/30 16:38
  */
-public class Handler implements ChannelInboundHandler, ChannelOutboundHandler {
+public class InHandler implements ChannelInboundHandler{
     @Override
     public void channelRegistered(ChannelHandlerContext channelHandlerContext) throws Exception {
 
@@ -26,12 +26,12 @@ public class Handler implements ChannelInboundHandler, ChannelOutboundHandler {
 
     @Override
     public void channelActive(ChannelHandlerContext channelHandlerContext) throws Exception {
-
+        System.out.println("有连接。。。");
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext channelHandlerContext) throws Exception {
-
+        System.out.println("连接断开");
     }
 
     @Override
@@ -67,45 +67,6 @@ public class Handler implements ChannelInboundHandler, ChannelOutboundHandler {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable) throws Exception {
-
-    }
-
-    @Override
-    public void bind(ChannelHandlerContext channelHandlerContext, SocketAddress socketAddress, ChannelPromise channelPromise) throws Exception {
-
-    }
-
-    @Override
-    public void connect(ChannelHandlerContext channelHandlerContext, SocketAddress socketAddress, SocketAddress socketAddress1, ChannelPromise channelPromise) throws Exception {
-
-    }
-
-    @Override
-    public void disconnect(ChannelHandlerContext channelHandlerContext, ChannelPromise channelPromise) throws Exception {
-
-    }
-
-    @Override
-    public void close(ChannelHandlerContext channelHandlerContext, ChannelPromise channelPromise) throws Exception {
-
-    }
-
-    @Override
-    public void deregister(ChannelHandlerContext channelHandlerContext, ChannelPromise channelPromise) throws Exception {
-
-    }
-
-    @Override
-    public void read(ChannelHandlerContext channelHandlerContext) throws Exception {
-
-    }
-
-    @Override
-    public void write(ChannelHandlerContext channelHandlerContext, Object o, ChannelPromise channelPromise) throws Exception {
-    }
-
-    @Override
-    public void flush(ChannelHandlerContext channelHandlerContext) throws Exception {
 
     }
 }

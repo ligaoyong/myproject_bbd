@@ -3,11 +3,9 @@ package com.NIO.socketNetty;
 import jline.ConsoleReader;
 import jline.ConsoleReaderInputStream;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.Scanner;
 
 /**
@@ -18,24 +16,34 @@ import java.util.Scanner;
  */
 public class SocketClient {
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("0.0.0.0", 8888);
-        ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+        Socket socket = new Socket("127.0.0.1", 8888);
+        System.out.println(socket.isConnected());
+        InputStream inputStream = socket.getInputStream();
+        OutputStream outputStream = socket.getOutputStream();
 
         Runnable reveive = () -> {
-            Scanner scanner = new Scanner(inputStream);
-            while (scanner.hasNext()){
-                System.out.println("接收到："+scanner.next());
+            byte[] bytes = new byte[1024];
+            int num = 0;
+            try {
+                while ((num=inputStream.read(bytes))!= -1){
+                    System.out.println("收到数据："+new String(bytes));
+                }
+            }catch (Exception e){
+                System.out.println(e);
             }
         };
-        Runnable send = ()->{
+        Runnable send = () -> {
             try {
-                Scanner scanner = new Scanner(new ConsoleReaderInputStream(new ConsoleReader()));
-                while (scanner.hasNext()){
-                    String next = scanner.next();
-                    outputStream.writeUTF(next);
-                    System.out.println("已发送："+next);
-                }
+                String data = "hello";
+                /**
+                 * 这里非常重要 socket要与netty服务端相连 数据的交互方式必须按照ByteBuffer来
+                 */
+                ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+                byteBuffer.clear();
+                byteBuffer.put(data.getBytes());
+                byteBuffer.flip();
+                outputStream.write(byteBuffer.array());
+                System.out.println("已发送：" + data);
             } catch (IOException e) {
                 e.printStackTrace();
             }

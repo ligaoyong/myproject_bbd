@@ -2,10 +2,13 @@ package com.NIO.socketNetty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +42,15 @@ public class NettyServer {
             //服务器 配置
             ServerBootstrap sbs = new ServerBootstrap().group(boss, work)
                     .channel(NioServerSocketChannel.class)
-                    .handler(new LoggingHandler(LogLevel.INFO))
-                    .localAddress(new InetSocketAddress(port))
-                    .childHandler(new Handler())
+                    //.handler(new LoggingHandler(LogLevel.INFO))
+                    //.localAddress(new InetSocketAddress(port))
+                    .childHandler(new ChannelInitializer<NioSocketChannel>() {
+                        @Override
+                        protected void initChannel(NioSocketChannel ch) throws Exception {
+                            ch.pipeline().addLast(new StringDecoder());
+                            ch.pipeline().addLast(new InHandler());
+                        }
+                    })
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
