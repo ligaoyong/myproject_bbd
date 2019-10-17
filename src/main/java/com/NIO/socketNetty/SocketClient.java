@@ -37,6 +37,8 @@ public class SocketClient {
                 String data = "hello";
                 /**
                  * 这里非常重要 socket要与netty服务端相连 数据的交互方式必须按照ByteBuffer来
+                 * netty服务端第一个处理器必须是StringDecoder，以便把ByteBuffer解码为String
+                 * netty服务端最后一个处理器也必须是StringEncoder，不然客户端收不到数据
                  */
                 ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
                 byteBuffer.clear();
@@ -50,6 +52,5 @@ public class SocketClient {
         };
         new Thread(reveive).start();
         new Thread(send).start();
-
     }
 }

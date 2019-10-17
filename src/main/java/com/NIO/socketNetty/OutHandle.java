@@ -45,7 +45,8 @@ public class OutHandle implements ChannelOutboundHandler {
 
     @Override
     public void write(ChannelHandlerContext channelHandlerContext, Object o, ChannelPromise channelPromise) throws Exception {
-
+        System.out.println("OutHandle接收到 : "+o);
+        channelHandlerContext.channel().writeAndFlush(o+" end!");
     }
 
     @Override

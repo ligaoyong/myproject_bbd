@@ -37,7 +37,8 @@ public class InHandler implements ChannelInboundHandler{
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object o) throws Exception {
         System.out.println("收到消息："+o.toString());
-        channelHandlerContext.channel().write(o.toString());
+        String response = o.toString() + "client!";
+        channelHandlerContext.channel().writeAndFlush(response);
     }
 
     @Override

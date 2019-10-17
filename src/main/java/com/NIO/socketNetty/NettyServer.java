@@ -9,6 +9,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +48,11 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<NioSocketChannel>() {
                         @Override
                         protected void initChannel(NioSocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new StringDecoder());
+                            ch.pipeline().addLast(new StringDecoder()); //必须要加 不加不生效
                             ch.pipeline().addLast(new InHandler());
+                            //ch.pipeline().addLast(new OutHandle()); //不知道为什么加入后InHandle都不生效了
+                            ch.pipeline().addLast(new StringEncoder()); //必须要加 不然socket客户端收不到数据
+
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
