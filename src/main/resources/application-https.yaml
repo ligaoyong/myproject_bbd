@@ -1,0 +1,8 @@
+server:
+  port: 443
+  # ssl配置
+  ssl:
+    key-store: classpath:tomcat.keystore # 证书路径+名字
+    key-store-password: 1234567890  # 密钥库密码 生产证书时的密码
+    key-store-type: JKS
+    key-alias: tomcat

@@ -1,4 +1,4 @@
-package com.bbd;
+/*package com.bbd;
 
 import com.spring5.web.dispatcherServlet.Annotations;
 import org.junit.Test;
@@ -18,4 +18,4 @@ public class MyTest {
         annotations.getAccount();
     }
 
-}
+}*/
