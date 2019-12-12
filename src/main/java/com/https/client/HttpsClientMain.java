@@ -36,7 +36,7 @@ public class HttpsClientMain {
         SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(trustStrategy).build();
         //创建SSL连接工厂
         // 若出现Certificate for <localhost> doesn't match any of the subject alternative names: []
-        // 则加上NoopHostnameVerifier.INSTANCE
+        // 则加上NoopHostnameVerifier.INSTANCE，标识不验证域名
         SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
         //创建http客户端
         CloseableHttpClient httpClient = HttpClients.custom()
@@ -44,7 +44,7 @@ public class HttpsClientMain {
 
         RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
 
-        ResponseEntity<String> forEntity = restTemplate.getForEntity("https://localhost/hello", String.class);
+        ResponseEntity<String> forEntity = restTemplate.getForEntity("https://127.0.0.1:443/hello", String.class);
         System.out.println(forEntity.getBody());
     }
 
