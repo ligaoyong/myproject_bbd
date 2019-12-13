@@ -39,5 +39,9 @@ public class HttpHelloWorldServerInitializer extends ChannelInitializer<SocketCh
         p.addLast(new HttpServerCodec());
         p.addLast(new HttpServerExpectContinueHandler());
         p.addLast(new HttpHelloWorldServerHandler());
+        //添加全局异常处理器
+        p.addLast(new CustomDuplexExceptionHandler());
+        //处理String消息的Outbound,封装为ByteBuff给HttpServerCodec里的Out处理
+        p.addLast(new CustomOutHandler());
     }
 }

@@ -21,6 +21,9 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import jodd.util.MathUtil;
+
+import java.util.Random;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.*;
 import static io.netty.handler.codec.http.HttpHeaderValues.*;
@@ -38,6 +41,15 @@ public class HttpHelloWorldServerHandler extends SimpleChannelInboundHandler<Htt
     @Override
     public void channelRead0(ChannelHandlerContext ctx, HttpObject msg) {
         if (msg instanceof HttpRequest) {
+            try { //随机抛出异常
+                if (MathUtil.randomInt(0,100) % 2 == 0){
+                    throw new NullPointerException("测试异常");
+                }
+            }catch (Exception e){
+                ctx.fireExceptionCaught(e);
+                return;
+            }
+
             HttpRequest req = (HttpRequest) msg;
 
             boolean keepAlive = HttpUtil.isKeepAlive(req);
