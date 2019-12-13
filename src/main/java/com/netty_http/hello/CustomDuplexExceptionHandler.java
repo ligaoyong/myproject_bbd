@@ -13,10 +13,9 @@ public class CustomDuplexExceptionHandler extends ChannelInboundHandlerAdapter {
      * 捕捉到异常 直接写回  作为最后一个Inbound
      * @param ctx
      * @param cause
-     * @throws Exception
      */
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        ctx.write("异常：" + cause.getMessage());
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        ctx.writeAndFlush("异常：" + cause.getMessage());
     }
 }

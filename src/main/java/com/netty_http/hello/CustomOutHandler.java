@@ -1,14 +1,19 @@
 package com.netty_http.hello;
 
 import io.netty.buffer.*;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelOutboundHandlerAdapter;
-import io.netty.channel.ChannelPromise;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.HttpMessage;
+import io.netty.channel.*;
+import io.netty.handler.codec.http.*;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaderValues.CLOSE;
+import static io.netty.handler.codec.http.HttpHeaderValues.KEEP_ALIVE;
+import static io.netty.handler.codec.http.HttpHeaderValues.TEXT_PLAIN;
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 
 /**
  * 处理String消息的写回
@@ -18,20 +23,28 @@ import java.nio.ByteBuffer;
  */
 public class CustomOutHandler extends ChannelOutboundHandlerAdapter {
     /**
-     * 将string消息传唤为ByteBuff或者http相关的 不然HttpServerCodec中的HttpObjectEncoder不会处理
+     * 将string消息转换为HttpResponse  然后然HttpObjectEncoder处理
      * HttpObjectEncoder默认不处理字符串消息
+     *
      * @param ctx
      * @param msg
      * @param promise
-     * @throws Exception
      */
     @Override
-    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        if (msg instanceof String){
-            //线程本地的缓冲
-            ByteBuf byteBuf = ByteBufUtil.threadLocalDirectBuffer();
-            byteBuf.writeBytes(((String) msg).getBytes());
-            ctx.writeAndFlush(byteBuf).addListener((future) ->ctx.close());
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise){
+        if (msg instanceof String) {
+            FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, OK,
+                    Unpooled.wrappedBuffer(((String) msg).getBytes(StandardCharsets.UTF_8)));
+            response.headers()
+                    .set(CONTENT_TYPE, TEXT_PLAIN)
+                    //.set()
+                    .setInt(CONTENT_LENGTH, response.content().readableBytes());
+
+            // Tell the client we're going to close the connection.
+            response.headers().set(CONNECTION, CLOSE);
+            ChannelFuture f = ctx.write(response);
+            f.addListener(ChannelFutureListener.CLOSE);
+
         }
     }
 }
