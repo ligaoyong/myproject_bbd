@@ -43,6 +43,9 @@ public class CustomOutHandler extends ChannelOutboundHandlerAdapter {
             response.headers().set(CONNECTION, CLOSE);
             ChannelFuture f = ctx.write(response);
             f.addListener(ChannelFutureListener.CLOSE);
+
+            //尽量不要在Out中使用ctx.channel().write(response) 避免死循环的出现
+            //ctx.channel().write(response);
         }
     }
 }
