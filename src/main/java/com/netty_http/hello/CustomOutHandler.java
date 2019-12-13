@@ -23,8 +23,8 @@ import static io.netty.handler.codec.http.HttpResponseStatus.OK;
  */
 public class CustomOutHandler extends ChannelOutboundHandlerAdapter {
     /**
-     * 将string消息转换为HttpResponse  然后然HttpObjectEncoder处理
-     * HttpObjectEncoder默认不处理字符串消息
+     * 将string消息转换为HttpResponse  然后由HttpServerCodec中的HttpObjectEncoder处理
+     * HttpObjectEncoder默认处理HttpResponse的消息
      *
      * @param ctx
      * @param msg
@@ -36,15 +36,13 @@ public class CustomOutHandler extends ChannelOutboundHandlerAdapter {
             FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, OK,
                     Unpooled.wrappedBuffer(((String) msg).getBytes(StandardCharsets.UTF_8)));
             response.headers()
-                    .set(CONTENT_TYPE, TEXT_PLAIN)
-                    //.set()
+                    .set("Content-Type", "text/html;charset=utf-8")
                     .setInt(CONTENT_LENGTH, response.content().readableBytes());
 
             // Tell the client we're going to close the connection.
             response.headers().set(CONNECTION, CLOSE);
             ChannelFuture f = ctx.write(response);
             f.addListener(ChannelFutureListener.CLOSE);
-
         }
     }
 }
