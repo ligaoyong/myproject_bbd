@@ -1,4 +1,4 @@
-package com.netty_http.hello;
+package com.netty.netty_http.hello;
 
 import io.netty.channel.*;
 
