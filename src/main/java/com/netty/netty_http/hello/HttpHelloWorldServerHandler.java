@@ -39,6 +39,9 @@ public class HttpHelloWorldServerHandler extends SimpleChannelInboundHandler<Htt
     @Override
     public void channelRead0(ChannelHandlerContext ctx, HttpObject msg) {
         if (msg instanceof HttpRequest) {
+
+            //ctx.writeAndFlush("从第一个InHandler中写回").addListener(ChannelFutureListener.CLOSE);
+            //ctx.channel().writeAndFlush("从第一个InHandler中写回").addListener(ChannelFutureListener.CLOSE);
             try { //随机抛出异常
                 if (MathUtil.randomInt(0,100) % 2 == 0){
                     throw new NullPointerException("测试异常");
