@@ -53,7 +53,7 @@ public class HttpHelloWorldServerInitializer extends ChannelInitializer<SocketCh
          */
         p.addLast(new CustomOutHandler());
         //添加全局异常处理器
-        p.addLast(new CustomInboundExceptionHandler());
+        //p.addLast(new CustomInboundExceptionHandler());
 
     }
 }
