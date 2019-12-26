@@ -31,6 +31,7 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
+
         if (!request.decoderResult().isSuccess()){
             sendError(ctx, "错误1");
             return;
@@ -46,12 +47,8 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
             return;
         }
         File file = new File(path);
-        if (file.isHidden() || !file.exists()){
-            sendError(ctx,"文件不存在4");
-            return;
-        }
-        if (!file.isFile()){
-            sendError(ctx,"不是一个文件5");
+        if (!file.exists()){
+            sendError(ctx, "错误4");
             return;
         }
 
@@ -67,6 +64,15 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
             ChannelFuture future = ctx.write(new ChunkedFile(randomAccessFile, 0, fileLength, 8192), ctx.newProgressivePromise());
             //future.addListener(new DelegatingChannelPromiseNotifier())
         }
+    }
+
+    /**
+     * 构建返回信息
+     * @param file
+     * @return
+     */
+    private FullHttpResponse buildResponse(File file){
+        return null;
     }
 
     private void setContentTypeHeader(DefaultHttpResponse response, File file) {
@@ -100,9 +106,8 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
     }
 
     private void sendError(ChannelHandlerContext ctx, String s) {
-        DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST);
+        DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html;charset=UTF_8");
-//        response.headers().set(HttpHeaderNames.CONTENT_LENGTH, s.length());
         ByteBuf buf = Unpooled.copiedBuffer(s.getBytes(StandardCharsets.UTF_8));
         response.content().writeBytes(buf);
         ctx.writeAndFlush(response);
