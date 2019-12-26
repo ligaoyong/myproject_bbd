@@ -19,7 +19,7 @@ import io.netty.handler.stream.ChunkedWriteHandler;
  */
 public class HttpFileServer {
 
-    private static final String DEFAULT_URL = "/src/com/phei/netty/";
+    private static final String DEFAULT_URL = "/";
 
     public static void main(String[] args) throws InterruptedException {
         int port = 8080;
