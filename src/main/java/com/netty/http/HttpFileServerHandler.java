@@ -7,6 +7,7 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.stream.ChunkedFile;
 import org.aspectj.util.FileUtil;
 
+import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
@@ -38,14 +39,9 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
         }
         final String uri = request.uri();
         if (uri.contains("favicon.ico")){
-            ctx.close();
             return;
         }
         final String path = sanitizeUri(uri);
-        if (path == null){
-            sendError(ctx, "路径不存在");
-            return;
-        }
         File file = new File(path);
         if (!file.exists()){
             sendError(ctx, "文件不存在");
@@ -60,30 +56,43 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
             //文件
             try(RandomAccessFile randomAccessFile = new RandomAccessFile(file,"r")){
                 long fileLength = randomAccessFile.length();
-                DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-                response.headers().set("Content-Type", "text/html;charset=utf-8");
-                //response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
+                HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+                response.headers().set(HttpHeaderNames.CONTENT_LENGTH, fileLength);
+                MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+                //content-type: application/octet-stream 文件下载
+                response.headers().set(HttpHeaderNames.CONTENT_TYPE, mimeTypesMap.getContentType(file.getPath()));
                 if (isKeepAlive(request)){
-                    response.headers().set("connection", HttpHeaderValues.KEEP_ALIVE);
+                    response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
                 }
-                //直接写回文件可以
-                response.content().writeBytes(FileUtil.readAsByteArray(file));
-                ctx.writeAndFlush(response);
-                //文件分块写回 没有测试通过
-                /*ChannelFuture future = ctx.write(new ChunkedFile(randomAccessFile, 0, fileLength, 81), ctx.newProgressivePromise());
-                future.addListener(new ChannelProgressiveFutureListener() {
+
+                /********直接预览*********/
+                //response.content().writeBytes(FileUtil.readAsByteArray(file));
+
+                /***********文件下载******/
+                //先写初始化行和头
+                ctx.write(response);
+                //在写内容(文件分块写回下载)
+                ChannelFuture sendFileFuture = ctx.write(new ChunkedFile(randomAccessFile, 0, fileLength, 81), ctx.newProgressivePromise());
+                ChannelFuture lastContentFuture = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
+                sendFileFuture.addListener(new ChannelProgressiveFutureListener() {
                     @Override
                     public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) throws Exception {
-                        System.out.println("操作中");
+                        if (total < 0) { // total unknown
+                            System.err.println(future.channel() + " Transfer progress: " + progress);
+                        } else {
+                            System.err.println(future.channel() + " Transfer progress: " + progress + " / " + total);
+                        }
                     }
 
                     @Override
                     public void operationComplete(ChannelProgressiveFuture future) throws Exception {
-                        System.out.println("操作完毕");
-                        future.channel().flush();
-                        //future.channel().close();
+                        System.err.println(future.channel() + " Transfer complete.");
                     }
-                });*/
+                });
+                if (!isKeepAlive(request)) {
+                    // Close the connection when the whole content is written out.
+                    lastContentFuture.addListener(ChannelFutureListener.CLOSE);
+                }
             }
         }
 
