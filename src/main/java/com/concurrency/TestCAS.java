@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -136,16 +137,51 @@ public class TestCAS {
         threadPool.shutdownNow();
     }
 
+    /**
+     * LongAdder
+     * @param object
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     * @throws InterruptedException
+     */
+    private void updateByLongAdder(TestCAS object) throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+        ExecutorService threadPool = Executors.newFixedThreadPool(10);
+        CountDownLatch countDownLatch = new CountDownLatch(10);
+        LongAdder longAdder = new LongAdder();
+        longAdder.add(object.count);
+        Runnable runnable = () -> {
+            for (int i = 0; i < 10000000; i++) {
+                longAdder.add(1);
+            }
+            countDownLatch.countDown();
+        };
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 10; i++) {
+            threadPool.execute(runnable);
+        }
+        countDownLatch.await();
+        System.out.println("updateByLongAdder -- count : " + longAdder.intValue());
+        System.out.println("updateByLongAdder -- 花费时间 ： " + String.valueOf(System.currentTimeMillis() - start));
+        threadPool.shutdownNow();
+    }
+
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, InterruptedException {
         TestCAS object = new TestCAS();
         object.updateByCas(object);
         object.updateByLock(object);
         object.updateBySynchronized(object);
+        object.updateByLongAdder(object);
 
         /**
          * 结果测试
          *      2个线程的情况下 进行1000万次更新 cas 676时间戳 lock 1015个时间戳 cas大概是0.7倍的lock 差距并不是那么大
-         *      10个线程的情况下 进行1000万次更新 cas 8906时间戳 lock 3450个时间戳 syn 4220个时间戳 cas远不如lock和syn
+         *      10个线程的情况下 进行1000万次更新
+         *          cas 8906时间戳
+         *          lock 3450个时间戳
+         *          syn 4220个时间戳
+         *          longAdder 165个时间戳
+         *      cas远不如lock和syn
+         *      但longAdder远远超过cas、syn、lock几乎不是一个数量级的
          */
 
         /**
@@ -153,6 +189,7 @@ public class TestCAS {
          *      在线程数量较少 竞争不激烈的情况下  cas有一定的优势
          *      但在线程数量较多 竞争非常激烈是 cas性能会大大降低  反而不如lock和synchronized的 而且cpu会飙升到100%
          *      这是因为竞争激烈的情况下  cas会出现大量的失败重试次数，反而不如锁的性能
+         *      建议使用longAdder，性能非常好
          */
     }
 }
