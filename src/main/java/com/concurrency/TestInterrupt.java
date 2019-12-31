@@ -3,6 +3,7 @@ package com.concurrency;
 /**
  * 测试中断
  */
+@SuppressWarnings("all")
 public class TestInterrupt {
     public static void main(String[] args) throws InterruptedException {
         Thread thread = new Thread(() -> {
