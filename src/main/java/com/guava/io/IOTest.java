@@ -24,9 +24,9 @@ public class IOTest {
     /**
      * ByteStreams	                            CharStreams
      * byte[] toByteArray(InputStream)	        String toString(Readable)
-     * N/A	                                    List<String> readLines(Readable)
+     * N/TestStaticInit	                                    List<String> readLines(Readable)
      * long copy(InputStream, OutputStream)	    long copy(Readable, Appendable)
-     * void readFully(InputStream, byte[])	    N/A
+     * void readFully(InputStream, byte[])	    N/TestStaticInit
      * void skipFully(InputStream, long)	    void skipFully(Reader, long)
      * OutputStream nullOutputStream()	        Writer nullWriter()
      */

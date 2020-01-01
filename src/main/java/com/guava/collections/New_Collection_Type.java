@@ -46,12 +46,12 @@ public class New_Collection_Type {
                 MultimapBuilder.hashKeys().hashSetValues().build();
 
 
-        treeListMultimap.put("A", 1);
-        treeListMultimap.put("A", 11);
+        treeListMultimap.put("TestStaticInit", 1);
+        treeListMultimap.put("TestStaticInit", 11);
         treeListMultimap.put("B", 2);
         treeListMultimap.put("B", 22);
 
-        List<Integer> list = treeListMultimap.get("A");
+        List<Integer> list = treeListMultimap.get("TestStaticInit");
         System.out.println(list);
     }
 
