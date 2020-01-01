@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.netty_http.hello;
+package com.netty.netty_http.hello;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

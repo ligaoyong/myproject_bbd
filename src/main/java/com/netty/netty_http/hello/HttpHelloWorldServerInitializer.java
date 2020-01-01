@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.netty_http.hello;
+package com.netty.netty_http.hello;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -53,7 +53,7 @@ public class HttpHelloWorldServerInitializer extends ChannelInitializer<SocketCh
          */
         p.addLast(new CustomOutHandler());
         //添加全局异常处理器
-        p.addLast(new CustomInboundExceptionHandler());
+        //p.addLast(new CustomInboundExceptionHandler());
 
     }
 }
