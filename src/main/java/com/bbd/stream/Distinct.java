@@ -34,7 +34,7 @@ public class Distinct{
 
         @Override
         public String toString() {
-            return "A{" +
+            return "TestStaticInit{" +
                     "name='" + name + '\'' +
                     ", age=" + age +
                     '}';

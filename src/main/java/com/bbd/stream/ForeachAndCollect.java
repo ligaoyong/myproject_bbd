@@ -46,7 +46,7 @@ public class ForeachAndCollect {
         //toMap()的第一个参数Object::toString 是键(需要从流中元素映射，本例使用流中的元素作为键)
         //toMap()的第二个参数String::toUpperCase 是值(也需要从流中进行映射，本例是将转换成大写)
         Map<String, String> map1 = list.stream().distinct().collect(Collectors.toMap(Object::toString, String::toUpperCase));
-        System.out.println(map1.toString());    //{a=A, b=B, c=C, d=D, e=E}
+        System.out.println(map1.toString());    //{a=TestStaticInit, b=B, c=C, d=D, e=E}
 
         //分类器
         //words -> words 表示一个分类器classifier 它返回流中每个元素所属的类别 本例就按照自身分类
