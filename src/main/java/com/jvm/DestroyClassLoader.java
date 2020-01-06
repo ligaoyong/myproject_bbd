@@ -5,6 +5,8 @@ import java.util.Enumeration;
 
 /**
  * 破坏 类加载双亲委派机制 ：让父类加载器请求子类加载器去加载类
+ *      只要在父类加载器中设置Thread.currentThread().getContextClassLoader()
+ *      就能让父类请求子类去加载类
  *
  * @author ligaoyong@gogpay.cn
  * @date 2020/1/3 15:08
