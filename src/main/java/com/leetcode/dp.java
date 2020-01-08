@@ -1,12 +1,12 @@
 package com.leetcode;
 
 /**
- * TODO
+ * 动态规划算法
  *
  * @author ligaoyong@gogpay.cn
  * @date 2020/1/6 15:25
  */
-public class Solution {
+public class dp {
     /**
      * 求最长回文字串
      *
