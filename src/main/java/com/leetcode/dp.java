@@ -316,7 +316,7 @@ public class dp {
     }
 
     public static void main(String[] args) {
-        Solution solution = new Solution();
+        dp solution = new dp();
         int[][] arg = {{0, 1, 0, 0, 0}, {1, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
         solution.uniquePathsWithObstacles(arg);
     }
