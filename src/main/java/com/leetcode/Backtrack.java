@@ -2,10 +2,7 @@ package com.leetcode;
 
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -272,5 +269,67 @@ public class Backtrack {
             tmp = tmp.substring(0, tmp.length() - 1);
 
         }
+    }
+
+    /**
+     * leetcode 37 解数独
+     * @param board
+     */
+    public void solveSudoku(char[][] board) {
+        // 记录每个坐标填如的值
+        Map<String, Character> selected = new HashMap<>();
+        int blank = 0;
+        for (int i = 0;i<board.length;i++){
+            for (int j=0;j<board[i].length;j++){
+                if (board[i][j] == '.') {
+                    blank += 1;
+                }
+            }
+        }
+        char[] candidate = {'1','2','3','4','5','6','7','8','9'};
+        backtrack(board,candidate,selected,blank,0,0);
+    }
+
+    private void backtrack(char[][] board,char[] candidate,Map<String, Character> selected,int blank,int startRow,int startColume){
+        //1、找出递归出口  也就是找到解
+        if (selected.size() == blank){
+            return;
+        }
+        //编列可选序列
+        for (int i = startRow;i<board.length;i++){
+            for (int j=startColume;j<board[i].length;j++){
+                //找到待处理的位置
+                if (board[i][j] == '.' && !selected.containsKey(i+","+"j")) {
+                    //遍历选择
+                    for (char c : candidate){
+                        if (valid(board,selected,c,i,j)){
+                            //做出选择
+                            selected.put(i + "," + "j", c);
+                            //递归
+                            backtrack(board,candidate,selected,blank,startRow,startColume);
+                            if (selected.size() == blank){
+                                return;
+                            }
+                            //回溯
+                            selected.remove(i + "," + "j", c);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    /**
+     *
+     * @param board 数独原图
+     * @param selected  已经填如的信息
+     * @param c 填如的数字
+     * @param i 行
+     * @param j 列
+     * @return
+     */
+    private boolean valid(char[][] board, Map<String, Character> selected, char c, int i, int j) {
+        return false;
     }
 }
