@@ -1,7 +1,10 @@
 package com.leetcode;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,8 +49,8 @@ import java.util.stream.Collectors;
 public class Backtrack {
     public static void main(String[] args) {
         Backtrack backtrack = new Backtrack();
-        List<List<String>> lists = backtrack.solveNQueens(4);
-        System.out.println(lists);
+        List<String> strings = backtrack.letterCombinations("23");
+        System.out.println(strings);
     }
 
     /**
@@ -220,6 +223,54 @@ public class Backtrack {
                 //回退-回溯  ---------撤销刚刚做的选择(如果选择有解 会被加入到result中) for循环以后做另外一个选择
                 selected.remove(selected.size() - 1);
             }
+        }
+    }
+
+
+    /**
+     * leetcode 17 回溯   电话号码的字母组合
+     *
+     * @param digits
+     * @return
+     */
+    public List<String> letterCombinations(String digits) {
+        ArrayList<String> res = new ArrayList<>();
+        if (digits.length() == 0){
+            return res;
+        }
+        String tmp = "";
+        HashMap<String, String> map = new HashMap<>();
+        map.put("2", "abc");
+        map.put("3", "def");
+        map.put("4", "ghi");
+        map.put("5", "jkl");
+        map.put("6", "mno");
+        map.put("7", "pqrs");
+        map.put("8", "tuv");
+        map.put("9", "wxyz");
+        String[] values = new String[digits.length()];
+        for (int i = 0; i < digits.length(); i++) {
+            values[i] = map.get(String.valueOf(digits.charAt(i)));
+        }
+        backtrack(values, tmp, res, 0);
+        return res;
+    }
+
+    private void backtrack(String[] digits, String tmp, ArrayList<String> res, int start) {
+        //1、先找递归出口
+        if (digits.length == tmp.length()) {
+            res.add(new String(tmp.toCharArray()));
+            return;
+        }
+        //选择所有条件
+        for (int i = 0; i < digits[start].length(); i++) {
+            // 选择条件
+            tmp += digits[start].charAt(i);
+            //递归 一层一层往下找 知道找到递归出口
+            backtrack(digits, tmp, res, start + 1);
+            //回溯 换同一层的下一个
+            tmp = tmp.substring(0, tmp.length() - 1);
+
         }
     }
 }
