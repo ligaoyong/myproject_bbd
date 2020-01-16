@@ -1,5 +1,11 @@
 package com.leetcode;
 
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * 深度优先算法
  *
@@ -86,5 +92,50 @@ public class DeepPriority {
             min = root.val;
         }
         return Math.min(rightTreeMin(root.left, min), rightTreeMin(root.right, min));
+    }
+
+    /**
+     * 104. 二叉树的最大深度
+     * @param root
+     * @return
+     */
+    public int maxDepth(TreeNode root) {
+        if (root == null){
+            return 0;
+        }
+        return Math.max(maxDepth(root.left), maxDepth(root.right)) +1;
+    }
+
+    /**
+     * 105. 从前序与中序遍历序列构造二叉树 xxxxxx
+     * @param preorder
+     * @param inorder
+     * @return
+     */
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if (preorder.length == 0){
+            return null;
+        }
+        TreeNode root = null;
+        ArrayList<Integer> preorder1= new ArrayList<>();
+        for (int value:preorder){
+            preorder1.add(value);
+        }
+        ArrayList<Integer> inorder1= new ArrayList<>();
+        for (int value:inorder){
+            inorder1.add(value);
+        }
+        return recurBuild(root, preorder1, inorder1);
+    }
+    private TreeNode recurBuild(TreeNode root, List<Integer> preorder, List<Integer> inorder){
+        if (preorder.size() == 0){
+            return null;
+        }
+        //构建根节点
+        root = new TreeNode(preorder.get(0));
+        //构建左子树
+        root.left = recurBuild(root.left,preorder.subList(1,preorder.size()),inorder.subList(0,inorder.indexOf(preorder.get(0))));
+        root.right = recurBuild(root.right,preorder.subList(2,preorder.size()),inorder.subList(inorder.indexOf(preorder.get(0))+1,inorder.size()));
+        return root;
     }
 }
