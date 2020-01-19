@@ -20,6 +20,8 @@ import java.util.Enumeration;
 public class LoginController {
 
     /**
+     * spring session 也是采用cookie 格式为session=xxxxx
+     *
      * 默认情况下，也就是应用程序不介入的情况下：
      * 同一个客户端只会记住上一次登录的用户
      * 问题：
@@ -27,9 +29,9 @@ public class LoginController {
      * 解决方案：
      *      1、同一个用户允许多个客户端同时在线
      *          1、1 多个会话之间不用共享数据，那么不用管，使用默认即可
-     *          1、2 多个会话之间需要共享数据，那么需要记录账号的多个session
+     *          1、2 多个会话之间需要通讯(例如A客户端登录的时候告诉B客户端)，那么需要记录账号的多个session
      *      2、只允许一个客户端在线
-     *          登录时检查会话是否存在，存在则删除其他客户端的会话，创建新的会话
+     *          登录时检查其他客户端会话是否存在，存在则删除其他客户端的会话，创建新的会话
      * @param request
      * @param userName
      * @return
