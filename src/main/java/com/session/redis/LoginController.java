@@ -24,7 +24,7 @@ public class LoginController {
      * 默认情况下 访问服务的时候就会创建session保存到redis中
      *
      * 默认情况下，也就是应用程序不介入的情况下：
-     *      同一个客户端只会记住上一次访问的会话 在不删除sessionId的情况下  同一个客户端都用同一个sessionId
+     *      同一个客户端只会记住上一次访问的会话 在不删除sessionId的情况下  同一个客户端的多次访问都用同一个cookie
      * 问题：
      *      如果同一个用户在不同的客户端登录，会创建不同的session 这样不同的session就会不同步
      * 解决方案：
