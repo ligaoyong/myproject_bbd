@@ -1,5 +1,10 @@
 package com.leetcode;
 
+import sun.reflect.generics.tree.Tree;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 动态规划算法
  *
@@ -7,6 +12,16 @@ package com.leetcode;
  * @date 2020/1/6 15:25
  */
 public class dp {
+    class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode(int x) {
+            val = x;
+        }
+    }
+
     /**
      * 求最长回文字串
      *
@@ -290,7 +305,8 @@ public class dp {
 
     /**
      * 最小路径和  leetcode 64
-     *  动态规划
+     * 动态规划
+     *
      * @param grid
      * @return
      */
@@ -303,7 +319,7 @@ public class dp {
         }
         //初始化行
         for (int i = 1; i < l; i++) {
-            grid[0][i] += grid[0][i-1];
+            grid[0][i] += grid[0][i - 1];
         }
 
         //执行状态转移
@@ -312,12 +328,55 @@ public class dp {
                 grid[i][j] += Math.min(grid[i][j - 1], grid[i - 1][j]);
             }
         }
-        return grid[h-1][l-1];
+        return grid[h - 1][l - 1];
+    }
+
+    /**
+     * 96. 不同的二叉搜索树
+     * 使用公式
+     *
+     * @param n
+     * @return
+     */
+    public int numTrees(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            for (int j = 0; j < i; j++) {
+                dp[i] += dp[j] * dp[i - 1 - j];
+            }
+        }
+        return dp[n];
+    }
+
+    /**
+     * 95. 不同的二叉搜索树 II
+     *
+     * @param n
+     * @return
+     */
+    public List<TreeNode> generateTrees(int n) {
+        List<TreeNode> res = new ArrayList<>();
+        if (n < 1) {
+            return res;
+        }
+        if (n == 1) {
+            TreeNode treeNode = new TreeNode(1);
+            res.add(treeNode);
+            return res;
+        }
+        //以每一个数作为根节点
+        for (int i = 2; i <= n; i++) {
+
+        }
+        return res;
     }
 
     public static void main(String[] args) {
         dp solution = new dp();
         int[][] arg = {{0, 1, 0, 0, 0}, {1, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
-        solution.uniquePathsWithObstacles(arg);
+//        solution.uniquePathsWithObstacles(arg);
+        System.out.println(solution.numTrees(3));
     }
 }
