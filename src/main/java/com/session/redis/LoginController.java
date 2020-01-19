@@ -66,6 +66,7 @@ public class LoginController {
     @GetMapping("/loginOut/{userName}")
     public String loginOut(HttpServletRequest request, @PathVariable String userName){
         HttpSession session = request.getSession();
+        //销毁session
         session.invalidate();
         return "退出登录，销毁session";
     }
