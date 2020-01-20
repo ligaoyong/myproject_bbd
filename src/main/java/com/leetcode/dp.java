@@ -367,7 +367,7 @@ public class dp {
             return res;
         }
         //以每一个数作为根节点
-        for (int i = 2; i <= n; i++) {
+        for (int i = 1; i <= n; i++) {
 
         }
         return res;
