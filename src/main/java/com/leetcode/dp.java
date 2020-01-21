@@ -373,6 +373,35 @@ public class dp {
         return res;
     }
 
+    /**
+     * 120. 三角形最小路径和 pass
+     *  dp[i][j]：表示第i行第j位 往下的最小路径和
+     * @param triangle
+     * @return
+     */
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int h = triangle.size();
+        int l = triangle.get(h - 1).size();
+        int[][] dp = new int[h + 1][l + 1];
+        //初始化最后一行
+        for (int i = 0; i < l + 1; i++) {
+            dp[h][i] = 0;
+        }
+        //初始化最后一列
+        for (int i = 0; i < h + 1; i++) {
+            dp[i][l] = 0;
+        }
+        //自底向上递归求解
+        //从最后一行开始
+        for (int i = h-1; i >= 0; i--) {
+            for (int j = 0; j < triangle.get(i).size(); j++) {
+                int value = triangle.get(i).get(j);
+                dp[i][j] = Math.min(dp[i + 1][j], dp[i + 1][j + 1]) + value;
+            }
+        }
+        return dp[0][0];
+    }
+
     public static void main(String[] args) {
         dp solution = new dp();
         int[][] arg = {{0, 1, 0, 0, 0}, {1, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};

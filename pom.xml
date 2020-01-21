@@ -71,6 +71,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>5.2.0.Final</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>validation-api</artifactId>
+                    <groupId>javax.validation</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka -->
