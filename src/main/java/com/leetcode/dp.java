@@ -391,7 +391,7 @@ public class dp {
         for (int i = 0; i < h + 1; i++) {
             dp[i][l] = 0;
         }
-        //自底向上递归求解
+        //自底向上求解
         //从最后一行开始
         for (int i = h-1; i >= 0; i--) {
             for (int j = 0; j < triangle.get(i).size(); j++) {
@@ -400,6 +400,31 @@ public class dp {
             }
         }
         return dp[0][0];
+    }
+
+    /**
+     * 121. 买卖股票的最佳时机 只能有一次交易
+     *  利用波峰与波谷求解
+     * @param prices
+     * @return
+     */
+    public int maxProfit(int[] prices) {
+        //记录波谷的位置
+        int minValue = Integer.MAX_VALUE;
+        //记录利润
+        int profit = 0;
+        for (int i=0;i<prices.length;i++){
+            //有更小的波谷
+            if (prices[i] < minValue){
+                minValue = prices[i];
+            }else {
+                //当前位置大于之前记录的波谷 表示价格比之前高 尝试卖掉股票 看看利润是否大于之前的利润
+                if (prices[i] - minValue > profit){
+                    profit = prices[i] - minValue;
+                }
+            }
+        }
+        return profit;
     }
 
     public static void main(String[] args) {
