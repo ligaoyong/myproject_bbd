@@ -1,7 +1,6 @@
 package com.leetcode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 图
@@ -32,11 +31,34 @@ public class Map {
 
     /**
      * 133. 克隆图
+     *  pass 使用深度便利算法
      * @param node
      * @return
      */
     public Node cloneGraph(Node node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.neighbors.size() == 0){
+            return new Node(1);
+        }
+        java.util.Map<Integer, Node> container = new HashMap<>();
+        return dfsClone(node, container);
+    }
 
-        return null;
+    private Node dfsClone(Node node, java.util.Map<Integer, Node> container) {
+        if (node == null) {
+            return null;
+        }
+        if (container.containsKey(node.val)) {
+            return container.get(node.val);
+        }
+        Node newNode = new Node(node.val);
+        container.put(newNode.val, newNode);
+        for (Node nodeItem : node.neighbors) {
+            Node neighbor = dfsClone(nodeItem, container);
+            newNode.neighbors.add(neighbor);
+        }
+        return newNode;
     }
 }
