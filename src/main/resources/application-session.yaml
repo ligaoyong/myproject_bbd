@@ -1,0 +1,19 @@
+server:
+  port: 8888
+
+spring:
+  session:
+    store-type: redis
+    redis:
+      flush-mode: on_save
+      namespace: spring:session
+  redis:
+    host: 10.10.9.97
+    port: 6379
+    password: dcb20150206
+    database: 8
+#    cluster:
+#      nodes: aaa:8080
+
+logging:
+  level: info

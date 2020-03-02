@@ -1,5 +1,10 @@
 package com.leetcode;
 
+import sun.reflect.generics.tree.Tree;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 动态规划算法
  *
@@ -7,6 +12,16 @@ package com.leetcode;
  * @date 2020/1/6 15:25
  */
 public class dp {
+    class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode(int x) {
+            val = x;
+        }
+    }
+
     /**
      * 求最长回文字串
      *
@@ -290,7 +305,8 @@ public class dp {
 
     /**
      * 最小路径和  leetcode 64
-     *  动态规划
+     * 动态规划
+     *
      * @param grid
      * @return
      */
@@ -303,7 +319,7 @@ public class dp {
         }
         //初始化行
         for (int i = 1; i < l; i++) {
-            grid[0][i] += grid[0][i-1];
+            grid[0][i] += grid[0][i - 1];
         }
 
         //执行状态转移
@@ -312,12 +328,109 @@ public class dp {
                 grid[i][j] += Math.min(grid[i][j - 1], grid[i - 1][j]);
             }
         }
-        return grid[h-1][l-1];
+        return grid[h - 1][l - 1];
+    }
+
+    /**
+     * 96. 不同的二叉搜索树
+     * 使用公式
+     *
+     * @param n
+     * @return
+     */
+    public int numTrees(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            for (int j = 0; j < i; j++) {
+                dp[i] += dp[j] * dp[i - 1 - j];
+            }
+        }
+        return dp[n];
+    }
+
+    /**
+     * 95. 不同的二叉搜索树 II
+     *
+     * @param n
+     * @return
+     */
+    public List<TreeNode> generateTrees(int n) {
+        List<TreeNode> res = new ArrayList<>();
+        if (n < 1) {
+            return res;
+        }
+        if (n == 1) {
+            TreeNode treeNode = new TreeNode(1);
+            res.add(treeNode);
+            return res;
+        }
+        //以每一个数作为根节点
+        for (int i = 1; i <= n; i++) {
+
+        }
+        return res;
+    }
+
+    /**
+     * 120. 三角形最小路径和 pass
+     *  dp[i][j]：表示第i行第j位 往下的最小路径和
+     * @param triangle
+     * @return
+     */
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int h = triangle.size();
+        int l = triangle.get(h - 1).size();
+        int[][] dp = new int[h + 1][l + 1];
+        //初始化最后一行
+        for (int i = 0; i < l + 1; i++) {
+            dp[h][i] = 0;
+        }
+        //初始化最后一列
+        for (int i = 0; i < h + 1; i++) {
+            dp[i][l] = 0;
+        }
+        //自底向上求解
+        //从最后一行开始
+        for (int i = h-1; i >= 0; i--) {
+            for (int j = 0; j < triangle.get(i).size(); j++) {
+                int value = triangle.get(i).get(j);
+                dp[i][j] = Math.min(dp[i + 1][j], dp[i + 1][j + 1]) + value;
+            }
+        }
+        return dp[0][0];
+    }
+
+    /**
+     * 121. 买卖股票的最佳时机 只能有一次交易
+     *  利用波峰与波谷求解
+     * @param prices
+     * @return
+     */
+    public int maxProfit(int[] prices) {
+        //记录波谷的位置
+        int minValue = Integer.MAX_VALUE;
+        //记录利润
+        int profit = 0;
+        for (int i=0;i<prices.length;i++){
+            //有更小的波谷
+            if (prices[i] < minValue){
+                minValue = prices[i];
+            }else {
+                //当前位置大于之前记录的波谷 表示价格比之前高 尝试卖掉股票 看看利润是否大于之前的利润
+                if (prices[i] - minValue > profit){
+                    profit = prices[i] - minValue;
+                }
+            }
+        }
+        return profit;
     }
 
     public static void main(String[] args) {
         dp solution = new dp();
         int[][] arg = {{0, 1, 0, 0, 0}, {1, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
-        solution.uniquePathsWithObstacles(arg);
+//        solution.uniquePathsWithObstacles(arg);
+        System.out.println(solution.numTrees(3));
     }
 }
