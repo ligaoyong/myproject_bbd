@@ -202,5 +202,6 @@ public class BitOperate {
         //源码          1000 0000 0000 0000 0000 0000 0000 1101
         System.out.println("i1 ^ i2 = "+r1);
         System.out.println(Integer.toBinaryString(r1)); // 补码得形式 ：1111 1111 1111 1111 1111 1111 1111 0011
+        //意义：可以用来算距离
     }
 }
