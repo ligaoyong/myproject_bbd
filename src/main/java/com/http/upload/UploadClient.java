@@ -1,6 +1,5 @@
 package com.http.upload;
 
-import org.json.HTTP;
 
 import java.io.*;
 import java.net.HttpURLConnection;
