@@ -25,7 +25,7 @@ public class DestroyClassLoader {
         // null DriverManager由BootstrapClassLoader加载的 BootstrapClassLoader由c++实现  并不存在与java中 所以为null
 
 
-        /*Connection connection = DriverManager.getConnection("jdbc:mysql://10.10.9.18:3306/information_schema");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://10.10.9.18:3306/information_schema");
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from character_sets");
         while (resultSet.next()){
@@ -35,6 +35,6 @@ public class DestroyClassLoader {
         }
         resultSet.close();
         statement.close();
-        connection.close();*/
+        connection.close();
     }
 }
