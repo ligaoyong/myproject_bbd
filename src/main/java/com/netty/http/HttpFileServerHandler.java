@@ -29,6 +29,7 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
+        System.out.println("当前线程："+Thread.currentThread().getName());
         if (!request.decoderResult().isSuccess()){
             sendError(ctx, "错误1");
             return;
@@ -114,7 +115,7 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
         for (File f: file.listFiles()){
             String f_path = file.getPath() + File.separator + f.getName();
             f_path = f_path.replace(dir, "");
-            buf.append("<li>"+"<a href="+"http://localhost:8080/"+f_path+">"+f.getName()+"</a></li>\r\n");
+            buf.append("<li>"+"<a href="+"http://localhost:8081/"+f_path+">"+f.getName()+"</a></li>\r\n");
         }
         buf.append("</ul></body></html>\r\n");
         response.content().writeBytes(buf.toString().getBytes(StandardCharsets.UTF_8));

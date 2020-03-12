@@ -10,6 +10,8 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.util.concurrent.DefaultThreadFactory;
+
 
 /**
  * HTTP文件服务器
@@ -22,13 +24,15 @@ public class HttpFileServer {
     private static final String DEFAULT_URL = "/";
 
     public static void main(String[] args) throws InterruptedException {
-        int port = 8080;
+        int port = 8081;
         new HttpFileServer().run(port,DEFAULT_URL);
     }
 
     public void run(final int port,final String url) throws InterruptedException {
-        NioEventLoopGroup bossGroup = new NioEventLoopGroup();
-        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+        NioEventLoopGroup bossGroup = new NioEventLoopGroup(2,new DefaultThreadFactory("boss"));
+        NioEventLoopGroup workerGroup = new NioEventLoopGroup(2, new DefaultThreadFactory("worker"));
+        //专门用于业务处理的线程，worker线程组专门处理读写事件
+        NioEventLoopGroup businessGroup = new NioEventLoopGroup(2, new DefaultThreadFactory("business"));
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap
@@ -45,8 +49,8 @@ public class HttpFileServer {
                             ch.pipeline().addLast("http-encoder", new HttpResponseEncoder());
                             //支持异步发送大的码流
                             ch.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
-                            //业务处理
-                            ch.pipeline().addLast("fileServerHandler", new HttpFileServerHandler(url));
+                            //业务处理，用特定的线程组处理
+                            ch.pipeline().addLast(businessGroup,"fileServerHandler", new HttpFileServerHandler(url));
                         }
                     })
                     ;
