@@ -29,7 +29,9 @@ public class HttpFileServer {
     }
 
     public void run(final int port,final String url) throws InterruptedException {
+        //boss是处理连接事件的 并将客户端分给worker
         NioEventLoopGroup bossGroup = new NioEventLoopGroup(2,new DefaultThreadFactory("boss"));
+        //worker是处理读写事件的 将读出来的数据交给handler(如果上层的handler没有指定线程池来处理，则使用worker来处理)
         NioEventLoopGroup workerGroup = new NioEventLoopGroup(2, new DefaultThreadFactory("worker"));
         //专门用于业务处理的线程，worker线程组专门处理读写事件
         NioEventLoopGroup businessGroup = new NioEventLoopGroup(2, new DefaultThreadFactory("business"));
@@ -50,7 +52,8 @@ public class HttpFileServer {
                             //支持异步发送大的码流
                             ch.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
                             //业务处理，用特定的线程组处理
-                            ch.pipeline().addLast(businessGroup,"fileServerHandler", new HttpFileServerHandler(url));
+//                            ch.pipeline().addLast(businessGroup,"fileServerHandler", new HttpFileServerHandler(url));
+                            ch.pipeline().addLast("fileServerHandler", new HttpFileServerHandler(url));
                         }
                     })
                     ;
