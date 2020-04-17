@@ -1,9 +1,105 @@
 package com.leetcode;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * 贪心算法
  */
 public class Tanxin {
+
+    /**
+     * 452. 用最少数量的箭引爆气球
+     *  按照起始位置排序后 找的重叠区间的个数
+     *
+     * @param points
+     * @return
+     */
+    public int findMinArrowShots(int[][] points) {
+        if (points.length == 0) {
+            return 0;
+        }
+        Arrays.sort(points, new myComparator());
+        int result = 1;
+        int end = points[0][1];
+        for (int i = 1; i < points.length; i++) {
+            //后一个与前面的没有重叠
+            if (points[i][0] > end){
+                result++;
+                end = points[i][1];
+            }else {
+                //后一个与前面的重叠且包含
+                if (points[i][1] <= end) {
+                    end = points[i][1];
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 435. 无重叠区间
+     *  按照起始位置排序后 找无重叠区间的个数
+     * @param intervals
+     * @return
+     */
+    public int eraseOverlapIntervals(int[][] intervals) {
+        if (intervals.length == 0) {
+            return 0;
+        }
+        Arrays.sort(intervals, new myComparator());
+        int result = 0;
+        int cur = 0;
+        int next = 1;
+        while (next < intervals.length) {
+            if (intervals[next][0] >= intervals[cur][1]) {
+                cur = next;
+                next++;
+            } else {
+                if (intervals[next][1] <= intervals[cur][1]) {
+                    cur = next;
+                    next++;
+                    result++;
+                } else {
+                    next++;
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
+    class myComparator implements Comparator<int[]> {
+        @Override
+        public int compare(int[] o1, int[] o2) {
+            return o1[0] - o2[0];
+        }
+    }
+
+    /**
+     * 455. 分发饼干
+     *
+     * @param g
+     * @param s
+     * @return
+     */
+    public int findContentChildren(int[] g, int[] s) {
+        if (g == null || s == null) {
+            return 0;
+        }
+        Arrays.sort(g);
+        Arrays.sort(s);
+        int gi = 0;
+        int si = 0;
+        while (gi < g.length && si < s.length) {
+            if (g[gi] <= s[si]) {
+                gi++;
+            }
+            si++;
+        }
+        return gi;
+    }
+
     /**
      * leetcode 122
      * 买股票问题
@@ -182,28 +278,28 @@ public class Tanxin {
         String res = "";
         int i = 0;
         //移除比后面大的
-        for ( i= 0; i < num.length()-1 && k > 0; i++) {
+        for (i = 0; i < num.length() - 1 && k > 0; i++) {
             if (Integer.valueOf(split[i]) > Integer.valueOf(split[i + 1])) {
                 k--;
                 continue;
             }
             res += split[i];
         }
-        if (i<num.length()){
+        if (i < num.length()) {
             res += num.substring(i);
         }
         //移除相等的
         if (k > 0) {
-            String [] split1 = res.split("");
+            String[] split1 = res.split("");
             String res1 = "";
-            for (i = 0; i < split1.length-1 && k > 0; i++) {
+            for (i = 0; i < split1.length - 1 && k > 0; i++) {
                 if (Integer.valueOf(split1[i]).equals(Integer.valueOf(split1[i + 1]))) {
                     k--;
                     continue;
                 }
                 res1 += split1[i];
             }
-            if (k > 0){
+            if (k > 0) {
                 res1 = res.substring(0);
             }
             res = res1;
@@ -211,10 +307,10 @@ public class Tanxin {
         if (k > 0) {
             res = res.substring(k);
         }
-        if (res.startsWith("0")){
+        if (res.startsWith("0")) {
             res = res.replaceFirst("[0]{1,}", "");
         }
-        if (res.equals("")){
+        if (res.equals("")) {
             return "0";
         }
         return res;
