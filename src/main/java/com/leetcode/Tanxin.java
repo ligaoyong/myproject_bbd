@@ -1,6 +1,9 @@
 package com.leetcode;
 
+import org.springframework.util.CollectionUtils;
+
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 
 /**
@@ -8,9 +11,51 @@ import java.util.Comparator;
  */
 public class Tanxin {
 
+    public static void main(String[] args) {
+        Tanxin tanxin = new Tanxin();
+        int[][] pe = new int[][]{new int[]{7, 0}, new int[]{4, 4}, new int[]{7, 1}, new int[]{5, 0}, new int[]{6, 1}, new int[]{5, 2}};
+        int[][] ints = tanxin.reconstructQueue(pe);
+        System.out.println();
+    }
+
+    /**
+     * 406. 根据身高重建队列
+     * 解：先按照身高排序 升高相等得按照第二个参数排序
+     * 从大到小依次移动位置看是否满足条件：因为大的排好序后 小的挪动位置并不会影响到大得
+     *
+     * @param people
+     * @return
+     */
+    public int[][] reconstructQueue(int[][] people) {
+        Arrays.sort(people, (o1, o2) -> {
+            if (o1[0] > o2[0]) {
+                return -1;
+            } else if (o1[0] < o2[0]) {
+                return 1;
+            } else {
+                return o1[1] > o2[1] ? 1 : -1;
+            }
+        });
+        for (int i = 1; i < people.length; i++) {
+            if (i > people[i][1]) {
+                //往前移 i-people[i][1]位
+                int[] tmp = new int[]{people[i][0], people[i][1]};
+                int index = people[i][1];
+                int j = i - 1;
+                for (; j >= index; j--) {
+                    people[j + 1][0] = people[j][0];
+                    people[j + 1][1] = people[j][1];
+                }
+                people[index][0] = tmp[0];
+                people[index][1] = tmp[1];
+            }
+        }
+        return people;
+    }
+
     /**
      * 452. 用最少数量的箭引爆气球
-     *  按照起始位置排序后 找的重叠区间的个数
+     * 按照起始位置排序后 找的重叠区间的个数
      *
      * @param points
      * @return
@@ -24,10 +69,10 @@ public class Tanxin {
         int end = points[0][1];
         for (int i = 1; i < points.length; i++) {
             //后一个与前面的没有重叠
-            if (points[i][0] > end){
+            if (points[i][0] > end) {
                 result++;
                 end = points[i][1];
-            }else {
+            } else {
                 //后一个与前面的重叠且包含
                 if (points[i][1] <= end) {
                     end = points[i][1];
@@ -39,7 +84,8 @@ public class Tanxin {
 
     /**
      * 435. 无重叠区间
-     *  按照起始位置排序后 找无重叠区间的个数
+     * 按照起始位置排序后 找无重叠区间的个数
+     *
      * @param intervals
      * @return
      */
@@ -316,15 +362,5 @@ public class Tanxin {
         return res;
     }
 
-    public static void main(String[] args) {
-        Tanxin tanxin = new Tanxin();
-//        int[] gas = {3, 3, 4};
-//        int[] cost = {3, 4, 4};
-//        int[] nums = {2, 3, 0, 1, 4};
-//        int jump = tanxin.jump(nums);
-//        System.out.println(jump);
-        String aa = "112";
-        String s = tanxin.removeKdigits(aa, 1);
-        System.out.println(s);
-    }
+
 }
